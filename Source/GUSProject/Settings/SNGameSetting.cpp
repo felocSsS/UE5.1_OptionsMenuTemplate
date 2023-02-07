@@ -77,8 +77,9 @@ FText USNGameSetting_Number::GetCurrentOptionName() const
 
 int32 USNGameSetting_Number::GetCurrentIndex() const
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, "lololol");
 	const int32 CurrentValue = GetCurrentValue();
-	return NumberOptions.IndexOfByPredicate([&](const auto& Opt){ return CurrentValue == Opt.Value; });
+	return NumberOptions.IndexOfByPredicate([&](const FOptionNumber& Opt){ return CurrentValue == Opt.Value; });
 }
 
 int32 USNGameSetting_Number::GetCurrentValue() const
@@ -94,6 +95,10 @@ void USNGameSetting_Number::SetCurrentValue(int32 InValue)
 
 	SetterFunc(InValue);
 }
+
+/*
+ *  USNGameSetting_Enum cpp
+ */
 
 void USNGameSetting_Enum::AddGetterFunc(TFunction<EWindowMode::Type()> InGetterFunc)
 {
@@ -141,11 +146,11 @@ FText USNGameSetting_Enum::GetCurrentOptionName() const
 	return Option->DisplayValue;
 }
 
-EWindowMode::Type USNGameSetting_Enum::GetCurrentIndex() const
+int32 USNGameSetting_Enum::GetCurrentIndex() const
 {
 	const EWindowMode::Type CurrentValue = GetCurrentValue();
-	const int32 Index = EnumOptions.IndexOfByPredicate([&](const FOptionEnum& Opt){ return CurrentValue == Opt.Value; });
-	return EnumOptions[Index].Value;
+	/*const int32 Index =*/ return EnumOptions.IndexOfByPredicate([&](const FOptionEnum& Opt){ return CurrentValue == Opt.Value; });
+	/*return EnumOptions[Index].Value;*/
 }
 
 EWindowMode::Type USNGameSetting_Enum::GetCurrentValue() const
@@ -156,6 +161,76 @@ EWindowMode::Type USNGameSetting_Enum::GetCurrentValue() const
 }
 
 void USNGameSetting_Enum::SetCurrentValue(EWindowMode::Type InValue)
+{
+	if (!SetterFunc) return;
+
+	SetterFunc(InValue);
+}
+
+/*
+ *  USNGameSetting_IntPoint cpp
+ */
+
+void USNGameSetting_IntPoint::AddGetterFunc(TFunction<FIntPoint()> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_IntPoint::AddSetterFunc(const TFunction<void(FIntPoint)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+void USNGameSetting_IntPoint::AddOption(FText InOptionDisplayName, FIntPoint InOptionValue)
+{
+	IntPointOptions.Add(FOptionIntPoint{InOptionDisplayName, InOptionValue});
+}
+
+void USNGameSetting_IntPoint::SetOptions(const TArray<FOptionIntPoint>& InOptions)
+{
+	IntPointOptions = InOptions;
+}
+
+void USNGameSetting_IntPoint::ApplyNextOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+	
+	const int32 NextIndex = (CurrentIndex + 1) % IntPointOptions.Num();
+	SetCurrentValue(IntPointOptions[NextIndex].Value);
+}
+
+void USNGameSetting_IntPoint::ApplyPreviousOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+	
+	const int32 PreviousIndex = CurrentIndex == 0 ? IntPointOptions.Num() - 1 : CurrentIndex - 1;
+	SetCurrentValue(IntPointOptions[PreviousIndex].Value);
+}
+
+FText USNGameSetting_IntPoint::GetCurrentOptionName() const
+{
+	const FIntPoint CurrentValue = GetCurrentValue();
+	const auto Option = IntPointOptions.FindByPredicate([&](const FOptionIntPoint& Opt) { return CurrentValue == Opt.Value;} );
+	if (!Option) return FText();
+	return Option->DisplayValue;
+}
+
+int32 USNGameSetting_IntPoint::GetCurrentIndex() const
+{
+	const FIntPoint CurrentValue = GetCurrentValue();
+	return IntPointOptions.IndexOfByPredicate([&](const FOptionIntPoint& Opt){ return CurrentValue == Opt.Value; });
+}
+
+FIntPoint USNGameSetting_IntPoint::GetCurrentValue() const
+{
+	if (!GetterFunc) return FIntPoint();
+
+	return GetterFunc();
+}
+
+void USNGameSetting_IntPoint::SetCurrentValue(FIntPoint InValue)
 {
 	if (!SetterFunc) return;
 

@@ -92,7 +92,43 @@ private:
 	TFunction<EWindowMode::Type()> GetterFunc;
 	TFunction<void(EWindowMode::Type)> SetterFunc;
 
-	EWindowMode::Type GetCurrentIndex() const;
+	/*EWindowMode::Type*/int32 GetCurrentIndex() const;
 	EWindowMode::Type GetCurrentValue() const;
 	void SetCurrentValue(EWindowMode::Type InValue);
+};
+
+USTRUCT()
+struct FOptionIntPoint
+{
+	GENERATED_BODY()
+
+	FText DisplayValue;
+	FIntPoint Value;
+};
+
+UCLASS()
+class USNGameSetting_IntPoint : public USNGameSetting
+{
+	GENERATED_BODY()
+	
+public:
+	void AddGetterFunc(TFunction<FIntPoint()> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(FIntPoint)> InSetterFunc);
+	void AddOption(FText InOptionDisplayName, FIntPoint InOptionValue);
+	void SetOptions(const TArray<FOptionIntPoint>& InOptions);
+
+	virtual void ApplyNextOption() override;
+	virtual void ApplyPreviousOption() override;
+	virtual FText GetCurrentOptionName() const override;
+
+protected:
+
+private:
+	TArray<FOptionIntPoint> IntPointOptions;
+	TFunction<FIntPoint()> GetterFunc;
+	TFunction<void(FIntPoint)> SetterFunc;
+
+	int32 GetCurrentIndex() const;
+	FIntPoint GetCurrentValue() const;
+	void SetCurrentValue(FIntPoint InValue);
 };

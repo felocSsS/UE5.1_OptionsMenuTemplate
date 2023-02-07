@@ -2,6 +2,8 @@
 
 
 #include "Settings/SNGameUserSettings.h"
+
+#include "Kismet/KismetSystemLibrary.h"
 #include "Settings/SNGameSetting.h"
 
 #define LOCTEXT_NAMESPACE "GameUserSettings"
@@ -21,9 +23,27 @@ USNGameUserSettings::USNGameUserSettings()
 		{LOCTEXT("WindowmodeOptions_Windowed_Loc", "Windowed"), EWindowMode::Windowed} 
 	};
 
+	TArray<FOptionIntPoint> ResolutionOptions;
+	TArray<FIntPoint> AllResolutions;
+	UKismetSystemLibrary::GetSupportedFullscreenResolutions(AllResolutions);
+	
+	for (FIntPoint Item : AllResolutions)
+	{
+		ResolutionOptions.Add(FOptionIntPoint{FText::FromString(Item.ToString()), Item});
+	}
+
+	{
+		USNGameSetting_IntPoint* Setting = NewObject<USNGameSetting_IntPoint>();
+		Setting->SetSettingName(LOCTEXT("Resolotion_Loc" , "Resolotion"));
+		Setting->SetOptions(ResolutionOptions);
+		Setting->AddGetterFunc([&]() { return GetScreenResolution(); } );
+		Setting->AddSetterFunc([&](FIntPoint Level) { SetScreenResolution(Level); ApplySettings(false); ApplyResolutionSettings(false); });
+		VideoSettings.Add(Setting);
+	}
+
 	{
 		USNGameSetting_Enum* Setting = NewObject<USNGameSetting_Enum>();
-		Setting->SetSettingName(LOCTEXT("AntiAliasing_Loc" , "WindowMode"));
+		Setting->SetSettingName(LOCTEXT("WindowMode_Loc" , "WindowMode"));
 		Setting->SetOptions(WindowModeOptions);
 		Setting->AddGetterFunc([&]() { return GetFullscreenMode(); } );
 		Setting->AddSetterFunc([&](EWindowMode::Type Level) { SetFullscreenMode(Level); ApplySettings(false); });
@@ -105,9 +125,9 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("VisualEffects_Loc" , "VisualEffects"));
-		//Setting->SetOptions(VFXOptions);
-		Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Low"), 0);
-		Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Medium"), 1);
+		Setting->SetOptions(VFXOptions);
+		/*Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Low"), 0);
+		Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Medium"), 1);*/
 		Setting->AddGetterFunc([&]() { return GetVisualEffectQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetVisualEffectQuality(Level); ApplySettings(false); });
 		VideoSettings.Add(Setting);
