@@ -23,6 +23,19 @@ USNGameUserSettings::USNGameUserSettings()
 		{LOCTEXT("WindowmodeOptions_Windowed_Loc", "Windowed"), EWindowMode::Windowed} 
 	};
 
+	const TArray<FOptionBool> BoolOptions = {
+		{LOCTEXT("Bool_On_Loc", "On"), true} ,
+		{LOCTEXT("Bool_Off_Loc", "Off"), false} 
+	};
+
+	const TArray<FOptionNumber> FrameLimitOptions = {
+		{FText::FromString("30"), 30} ,
+		{FText::FromString("60"), 60} ,
+		{FText::FromString("120"), 120} ,
+		{FText::FromString("144"), 144} ,
+		{LOCTEXT("FrameLimit_Loc", "Unlimited"), 0} 
+	};
+
 	TArray<FOptionIntPoint> ResolutionOptions;
 	TArray<FIntPoint> AllResolutions;
 	UKismetSystemLibrary::GetSupportedFullscreenResolutions(AllResolutions);
@@ -40,7 +53,6 @@ USNGameUserSettings::USNGameUserSettings()
 		Setting->AddSetterFunc([&](FIntPoint Level) { SetScreenResolution(Level); ApplySettings(false); ApplyResolutionSettings(false); });
 		VideoSettings.Add(Setting);
 	}
-
 	{
 		USNGameSetting_Enum* Setting = NewObject<USNGameSetting_Enum>();
 		Setting->SetSettingName(LOCTEXT("WindowMode_Loc" , "WindowMode"));
@@ -49,7 +61,38 @@ USNGameUserSettings::USNGameUserSettings()
 		Setting->AddSetterFunc([&](EWindowMode::Type Level) { SetFullscreenMode(Level); ApplySettings(false); });
 		VideoSettings.Add(Setting);
 	}
-	
+	{
+		USNGameSetting_Float* Setting = NewObject<USNGameSetting_Float>();
+		Setting->SetSettingName(LOCTEXT("ResScale_Loc" , "ResScale"));
+		Setting->AddGetterFunc([&]() { return GetResolutionScaleNormalized(); } );
+		Setting->AddSetterFunc([&](float Level){ SetResolutionScaleNormalized(Level); ApplySettings(false); });
+		Setting->WidgetType = EWidgetType::Slider;
+		VideoSettings.Add(Setting);
+	}
+	{
+		USNGameSetting_Bool* Setting = NewObject<USNGameSetting_Bool>();
+		Setting->SetSettingName(LOCTEXT("VSync_Loc" , "VSync"));
+		Setting->SetOptions(BoolOptions);
+		Setting->AddGetterFunc([&]() { return IsVSyncEnabled(); } );
+		Setting->AddSetterFunc([&](bool Level) { SetVSyncEnabled(Level); ApplySettings(false); });
+		VideoSettings.Add(Setting);
+	}
+	{
+		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
+		Setting->SetSettingName(LOCTEXT("FrameLimit_Loc" , "FrameLimit"));
+		Setting->SetOptions(FrameLimitOptions);
+		Setting->AddGetterFunc([&]() { return GetFrameRateLimit(); } );
+		Setting->AddSetterFunc([&](int32 Level) { SetFrameRateLimit(Level); ApplySettings(false); });
+		VideoSettings.Add(Setting);
+	}
+	{
+		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
+		Setting->SetSettingName(LOCTEXT("AntiAliasing_Loc" , "Anti-Aliasing"));
+		Setting->SetOptions(VFXOptions);
+		Setting->AddGetterFunc([&]() { return GetAntiAliasingQuality(); } );
+		Setting->AddSetterFunc([&](int32 Level) { SetAntiAliasingQuality(Level); ApplySettings(false); });
+		VideoSettings.Add(Setting);
+	}
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("AntiAliasing_Loc" , "Anti-Aliasing"));

@@ -4,8 +4,10 @@
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
 #include "SNSettingOptionWidget.h"
+#include "SNSettingOption_SliderWidget.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Settings/SNGameUserSettings.h"
+#include "Settings/SNGameSetting.h"
 
 #define LOCTEXT_NAMESPACE "GameUserSettings"
 
@@ -25,17 +27,52 @@ void USNVideoSettingsWidget::NativeOnInitialized()
 	VideoSettingsContainer->ClearChildren();
 
 	RunBenchmarkButton->OnClicked.AddDynamic(this, &ThisClass::OnBenchmark);
-
-	GenerateSettings();
 	
 	for (auto* Setting : VideoSettings)
 	{
-		const auto SettingWidget = CreateWidget<USNSettingOptionWidget>(this, SettingOptionWidgetClass);
-		if (SettingWidget)
+		if (Setting->WidgetType == EWidgetType::Standard)
 		{
-			SettingWidget->Init(Setting);
-			VideoSettingsContainer->AddChild(SettingWidget);
+			const auto SettingWidget = CreateWidget<USNSettingOptionWidget>(this, SettingOptionWidgetClass);
+			if (SettingWidget)
+			{
+				SettingWidget->Init(Setting);
+				VideoSettingsContainer->AddChild(SettingWidget);
+			}
 		}
+
+		if (Setting->WidgetType == EWidgetType::Slider)
+		{
+			const auto SettingWidget = CreateWidget<USNSettingOption_SliderWidget>(this, SettingOption_SliderWidgetClass);
+			if (SettingWidget)
+			{
+				SettingWidget->Init(Setting);
+				VideoSettingsContainer->AddChild(SettingWidget);
+			}
+		}
+			
+		/*switch (Setting->WidgetType)
+		{
+			case Standard:
+			{
+				const auto SettingWidget = CreateWidget<USNSettingOptionWidget>(this, SettingOptionWidgetClass);
+				if (SettingWidget)
+				{
+					SettingWidget->Init(Setting);
+					VideoSettingsContainer->AddChild(SettingWidget);
+				}
+					break;
+			}
+			case Slider:
+			{
+				const auto SettingWidget = CreateWidget<USNSettingOption_SliderWidget>(this, SettingOption_SliderWidgetClass);
+				if (SettingWidget)
+				{
+					SettingWidget->Init(Setting);
+					VideoSettingsContainer->AddChild(SettingWidget);
+				}
+					break;
+			}
+		}*/
 	}
 }
 
@@ -54,15 +91,11 @@ void USNVideoSettingsWidget::OnVideoSettingsUpdated()
 
 	for	(auto* Widget : VideoSettingsContainer->GetAllChildren())
 	{
-		if (auto* SettingOptionWidget = Cast<USNSettingOptionWidget>(Widget))
+		if (auto* SettingOptionWidget = Cast<USNBaseSettingWidget>(Widget))
 		{
-			SettingOptionWidget->UpdateTexts();
+			SettingOptionWidget->UpdateWidgetInfo();
 		}
 	}
-}
-
-void USNVideoSettingsWidget::GenerateSettings()
-{
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -13,15 +13,7 @@ void USNSettingOptionWidget::NativeOnInitialized()
 	PrevSettingButton->OnClicked.AddDynamic(this, &ThisClass::OnPrevSetting);
 }
 
-void USNSettingOptionWidget::Init(USNGameSetting* InSetting)
-{
-	Setting = MakeWeakObjectPtr(InSetting);
-	if (!Setting.IsValid()) return;
-	
-	UpdateTexts();
-}
-
-void USNSettingOptionWidget::UpdateTexts()
+void USNSettingOptionWidget::UpdateWidgetInfo()
 {
 	if (Setting.IsValid())
 	{

@@ -6,6 +6,14 @@
 #include "UObject/NoExportTypes.h"
 #include "SNGameSetting.generated.h"
 
+UENUM()
+enum EWidgetType
+{
+	Standard,
+	Slider
+	// maybe more in feature
+};
+
 UCLASS()
 class GUSPROJECT_API USNGameSetting : public UObject
 {
@@ -18,6 +26,10 @@ public:
 	virtual void ApplyNextOption();
 	virtual void ApplyPreviousOption();
 	virtual FText GetCurrentOptionName() const;
+	// for Resolution scale only
+	virtual void SetValue(float Percent);
+
+	EWidgetType WidgetType = EWidgetType::Standard;
 	
 protected:
 
@@ -48,7 +60,7 @@ public:
 	virtual void ApplyNextOption() override;
 	virtual void ApplyPreviousOption() override;
 	virtual FText GetCurrentOptionName() const override;
-
+	
 protected:
 
 private:
@@ -131,4 +143,61 @@ private:
 	int32 GetCurrentIndex() const;
 	FIntPoint GetCurrentValue() const;
 	void SetCurrentValue(FIntPoint InValue);
+};
+
+UCLASS()
+class USNGameSetting_Float : public USNGameSetting
+{
+	GENERATED_BODY()
+
+public:
+	void AddGetterFunc(TFunction<float()> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(float)> InSetterFunc);
+	float GetCurrentValue() const;
+	
+	// for Resolution scale only
+	virtual void SetValue(float Percent);
+	
+protected:
+
+private:
+	TFunction<float()> GetterFunc;
+	TFunction<void(float)> SetterFunc;
+};
+
+USTRUCT()
+struct FOptionBool
+{
+	GENERATED_BODY()
+
+	FText DisplayValue;
+	bool Value;
+};
+
+UCLASS()
+class USNGameSetting_Bool : public USNGameSetting
+{
+	GENERATED_BODY()
+	
+public:
+	void AddGetterFunc(TFunction<bool()> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(bool)> InSetterFunc);
+	void AddOption(FText InOptionDisplayName, bool InOptionValue);
+	void SetOptions(const TArray<FOptionBool>& InOptions);
+
+	virtual void ApplyNextOption() override;
+	virtual void ApplyPreviousOption() override;
+	virtual FText GetCurrentOptionName() const override;
+
+protected:
+
+private:
+	TArray<FOptionBool> BoolOptions;
+	TFunction<bool()> GetterFunc;
+	TFunction<void(bool)> SetterFunc;
+
+	int32 GetCurrentIndex() const;
+	bool GetCurrentValue() const;
+	void SetCurrentValue(bool InValue);
+	
 };

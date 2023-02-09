@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "SNBaseSettingWidget.h"
-#include "SNSettingOptionWidget.generated.h"
+#include "SNSettingOption_SliderWidget.generated.h"
 
+class USlider;
 class UTextBlock;
-class USNGameSetting;
-class UButton;
 
 UCLASS()
-class GUSPROJECT_API USNSettingOptionWidget : public USNBaseSettingWidget
+class GUSPROJECT_API USNSettingOption_SliderWidget : public USNBaseSettingWidget
 {
 	GENERATED_BODY()
 
@@ -21,23 +20,13 @@ public:
 protected:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* SettingDisplayName;
-
+	
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingCurrentValue;
-
-	UPROPERTY(meta=(BindWidget))
-	UButton* NextSettingButton;
-
-	UPROPERTY(meta=(BindWidget))
-	UButton* PrevSettingButton;
+	USlider* ProgressSlider;
 
 	virtual void NativeOnInitialized() override;
-	
+
 private:
 	UFUNCTION()
-	void OnNextSetting();
-
-	UFUNCTION()
-	void OnPrevSetting();
-	
+	void OnSliderValueChanged(float Value);
 };

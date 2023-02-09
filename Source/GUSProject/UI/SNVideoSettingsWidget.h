@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Settings/SNGameSetting.h"
 #include "SNVideoSettingsWidget.generated.h"
 
 class UVerticalBox;
 class USNSettingOptionWidget;
+class USNSettingOption_SliderWidget;
 class UButton;
 
 UCLASS()
@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UI")
 	TSubclassOf<USNSettingOptionWidget> SettingOptionWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UI")
+	TSubclassOf<USNSettingOption_SliderWidget> SettingOption_SliderWidgetClass;
+
 	UPROPERTY(meta=(BindWidget))
 	UButton* RunBenchmarkButton;
 
@@ -35,7 +38,5 @@ private:
 	void OnBenchmark();
 	
 	void OnVideoSettingsUpdated();
-	void GenerateSettings();
-
-	TArray<USNGameSetting*> VideoSettings1;
+	
 };

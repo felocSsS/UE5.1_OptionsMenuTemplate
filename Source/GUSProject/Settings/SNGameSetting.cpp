@@ -25,6 +25,10 @@ FText USNGameSetting::GetCurrentOptionName() const
 	return FText();
 }
 
+void USNGameSetting::SetValue(float Percent)
+{
+}
+
 /*
  *  USNGameSetting_Number cpp
  */
@@ -77,7 +81,6 @@ FText USNGameSetting_Number::GetCurrentOptionName() const
 
 int32 USNGameSetting_Number::GetCurrentIndex() const
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, "lololol");
 	const int32 CurrentValue = GetCurrentValue();
 	return NumberOptions.IndexOfByPredicate([&](const FOptionNumber& Opt){ return CurrentValue == Opt.Value; });
 }
@@ -231,6 +234,102 @@ FIntPoint USNGameSetting_IntPoint::GetCurrentValue() const
 }
 
 void USNGameSetting_IntPoint::SetCurrentValue(FIntPoint InValue)
+{
+	if (!SetterFunc) return;
+
+	SetterFunc(InValue);
+}
+
+/*
+ *  USNGameSetting_float cpp
+ */
+
+void USNGameSetting_Float::AddGetterFunc(TFunction<float()> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_Float::AddSetterFunc(const TFunction<void(float)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+float USNGameSetting_Float::GetCurrentValue() const
+{
+	if (!GetterFunc) return 0.0f;
+
+	return GetterFunc();
+}
+
+void USNGameSetting_Float::SetValue(float Percent)
+{
+	SetterFunc(Percent);
+}
+
+/*
+ *  USNGameSetting_bool cpp
+ */
+
+void USNGameSetting_Bool::AddGetterFunc(TFunction<bool()> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_Bool::AddSetterFunc(const TFunction<void(bool)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+void USNGameSetting_Bool::AddOption(FText InOptionDisplayName, bool InOptionValue)
+{
+	BoolOptions.Add(FOptionBool{InOptionDisplayName, InOptionValue});
+}
+
+void USNGameSetting_Bool::SetOptions(const TArray<FOptionBool>& InOptions)
+{
+	BoolOptions = InOptions;
+}
+
+void USNGameSetting_Bool::ApplyNextOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+	
+	const int32 NextIndex = (CurrentIndex + 1) % BoolOptions.Num();
+	SetCurrentValue(BoolOptions[NextIndex].Value);
+}
+
+void USNGameSetting_Bool::ApplyPreviousOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+	
+	const int32 PreviousIndex = CurrentIndex == 0 ? BoolOptions.Num() - 1 : CurrentIndex - 1;
+	SetCurrentValue(BoolOptions[PreviousIndex].Value);
+}
+
+FText USNGameSetting_Bool::GetCurrentOptionName() const
+{
+	const FIntPoint CurrentValue = GetCurrentValue();
+	const auto Option = BoolOptions.FindByPredicate([&](const FOptionBool& Opt) { return CurrentValue == Opt.Value;} );
+	if (!Option) return FText();
+	return Option->DisplayValue;
+}
+
+int32 USNGameSetting_Bool::GetCurrentIndex() const
+{
+	const bool CurrentValue = GetCurrentValue();
+	return BoolOptions.IndexOfByPredicate([&](const FOptionBool& Opt){ return CurrentValue == Opt.Value; });
+}
+
+bool USNGameSetting_Bool::GetCurrentValue() const
+{
+	if (!GetterFunc) return false;
+
+	return GetterFunc();
+}
+
+void USNGameSetting_Bool::SetCurrentValue(bool InValue)
 {
 	if (!SetterFunc) return;
 
