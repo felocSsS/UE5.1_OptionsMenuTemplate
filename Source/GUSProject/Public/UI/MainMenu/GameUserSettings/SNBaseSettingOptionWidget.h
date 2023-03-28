@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "SNBaseSettingWidget.generated.h"
+#include "SNBaseSettingOptionWidget.generated.h"
 
 class USNGameSetting;
 
 UCLASS()
-class GUSPROJECT_API USNBaseSettingWidget : public UUserWidget
+class GUSPROJECT_API USNBaseSettingOptionWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -22,6 +22,6 @@ protected:
 	virtual void Init(USNGameSetting* InSetting);
 	
 private:
-	friend class USNVideoSettingsWidget;
+	friend class USNBaseSettingsScreenWidget;
 	
 };

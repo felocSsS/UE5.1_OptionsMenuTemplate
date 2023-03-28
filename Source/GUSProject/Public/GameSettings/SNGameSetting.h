@@ -35,6 +35,7 @@ protected:
 
 private:
 	FText SettingName;
+	
 };
 
 USTRUCT()
@@ -88,6 +89,7 @@ class USNGameSetting_Enum : public USNGameSetting
 	GENERATED_BODY()
 
 public:
+
 	void AddGetterFunc(TFunction<EWindowMode::Type()> InGetterFunc);
 	void AddSetterFunc(const TFunction<void(EWindowMode::Type)> InSetterFunc);
 	void AddOption(FText InOptionDisplayName, EWindowMode::Type InOptionValue);

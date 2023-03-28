@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Settings/SNGameSetting.h"
+#include "GameSettings/SNGameSetting.h"
 
 FText USNGameSetting::GetSettingName() const
 {
@@ -102,7 +102,6 @@ void USNGameSetting_Number::SetCurrentValue(int32 InValue)
 /*
  *  USNGameSetting_Enum cpp
  */
-
 void USNGameSetting_Enum::AddGetterFunc(TFunction<EWindowMode::Type()> InGetterFunc)
 {
 	GetterFunc = InGetterFunc;

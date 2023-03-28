@@ -8,13 +8,15 @@ public class GUSProject : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "SlateCore",});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		
 		PublicIncludePaths.AddRange(new string[]
 		{
-			"GUSProject"
+			"GUSProject",
+			"GUSProject/Public/UI/MainMenu/GameUserSettings",
+			"GUSProject/Public/GameSettings"
 		});
 
 		// Uncomment if you are using Slate UI

@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SNBaseSettingWidget.h"
-#include "SNSettingOptionWidget.generated.h"
+#include "UI/MainMenu/GameUserSettings/SNBaseSettingOptionWidget.h"
+#include "SNSettingOptionButtonWidget.generated.h"
 
 class UTextBlock;
 class USNGameSetting;
 class UButton;
 
 UCLASS()
-class GUSPROJECT_API USNSettingOptionWidget : public USNBaseSettingWidget
+class GUSPROJECT_API USNSettingOptionButtonWidget : public USNBaseSettingOptionWidget
 {
 	GENERATED_BODY()
 
@@ -39,5 +39,4 @@ private:
 
 	UFUNCTION()
 	void OnPrevSetting();
-	
 };

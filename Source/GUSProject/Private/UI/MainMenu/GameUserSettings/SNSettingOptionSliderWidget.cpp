@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/SNSettingOption_SliderWidget.h"
+#include "UI/MainMenu/GameUserSettings/SNSettingOptionSliderWidget.h"
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
-#include "Settings/SNGameSetting.h"
+#include "GameSettings//SNGameSetting.h"
 
-void USNSettingOption_SliderWidget::NativeOnInitialized()
+void USNSettingOptionSliderWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	
 	ProgressSlider->OnValueChanged.AddDynamic(this, &ThisClass::OnSliderValueChanged);
 }
 
-void USNSettingOption_SliderWidget::UpdateWidgetInfo()
+void USNSettingOptionSliderWidget::UpdateWidgetInfo()
 {
 	if (Setting.IsValid())
 	{
@@ -21,11 +21,10 @@ void USNSettingOption_SliderWidget::UpdateWidgetInfo()
 	}
 }
 
-void USNSettingOption_SliderWidget::OnSliderValueChanged(float Value)
+void USNSettingOptionSliderWidget::OnSliderValueChanged(float Value)
 {
 	if(Setting.IsValid())
 	{
 		Setting->SetValue(Value);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::SanitizeFloat(Value));
 	}
 }

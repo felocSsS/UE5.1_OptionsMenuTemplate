@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SNBaseSettingWidget.h"
-#include "SNSettingOption_SliderWidget.generated.h"
+#include "UI/MainMenu/GameUserSettings/SNBaseSettingOptionWidget.h"
+#include "SNSettingOptionSliderWidget.generated.h"
 
 class USlider;
 class UTextBlock;
 
 UCLASS()
-class GUSPROJECT_API USNSettingOption_SliderWidget : public USNBaseSettingWidget
+class GUSPROJECT_API USNSettingOptionSliderWidget : public USNBaseSettingOptionWidget
 {
 	GENERATED_BODY()
 

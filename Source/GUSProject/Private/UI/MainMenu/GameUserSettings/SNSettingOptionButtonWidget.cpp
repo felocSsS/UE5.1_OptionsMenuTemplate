@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/SNSettingOptionWidget.h"
+#include "UI/MainMenu/GameUserSettings/SNSettingOptionButtonWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
-#include "Settings/SNGameSetting.h"
+#include "GameSettings/SNGameSetting.h"
 
-void USNSettingOptionWidget::NativeOnInitialized()
+void USNSettingOptionButtonWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
@@ -13,7 +13,7 @@ void USNSettingOptionWidget::NativeOnInitialized()
 	PrevSettingButton->OnClicked.AddDynamic(this, &ThisClass::OnPrevSetting);
 }
 
-void USNSettingOptionWidget::UpdateWidgetInfo()
+void USNSettingOptionButtonWidget::UpdateWidgetInfo()
 {
 	if (Setting.IsValid())
 	{
@@ -22,7 +22,7 @@ void USNSettingOptionWidget::UpdateWidgetInfo()
 	}
 }
 
-void USNSettingOptionWidget::OnNextSetting()
+void USNSettingOptionButtonWidget::OnNextSetting()
 {
 	if (Setting.IsValid())
 	{
@@ -31,7 +31,7 @@ void USNSettingOptionWidget::OnNextSetting()
 	}
 }
 
-void USNSettingOptionWidget::OnPrevSetting()
+void USNSettingOptionButtonWidget::OnPrevSetting()
 {
 	if (Setting.IsValid())
 	{
