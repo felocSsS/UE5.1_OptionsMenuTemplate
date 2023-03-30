@@ -46,6 +46,7 @@ protected:
 	USNGameSettingInitializer* GameSettingInitializer;
 	
 private:
+	void SetDescriptionBlockText(FText InDescriptionHeaderText, FText InDescriptionText);
 	
 };
 

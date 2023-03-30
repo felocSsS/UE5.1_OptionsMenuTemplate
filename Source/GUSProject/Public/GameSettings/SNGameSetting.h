@@ -21,7 +21,9 @@ class GUSPROJECT_API USNGameSetting : public UObject
 
 public:
 	FText GetSettingName() const;
+	FText GetSettingDescription() const;
 	void SetSettingName(const FText InSettingName);
+	void SetSettingDescription(const FText InSettingDescription);
 
 	virtual void ApplyNextOption();
 	virtual void ApplyPreviousOption();
@@ -35,7 +37,7 @@ protected:
 
 private:
 	FText SettingName;
-	
+	FText SettingDescription;
 };
 
 USTRUCT()

@@ -20,8 +20,10 @@ protected:
 	TWeakObjectPtr<USNGameSetting> Setting;
 	
 	virtual void Init(USNGameSetting* InSetting);
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 private:
+	TFunction<void(FText, FText)> SetDescriptionBlockTextFunc;
 	friend class USNBaseSettingsScreenWidget;
 	
 };

@@ -66,6 +66,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_IntPoint* Setting = NewObject<USNGameSetting_IntPoint>();
 		Setting->SetSettingName(LOCTEXT("Resolotion_Loc" , "Resolotion"));
+		Setting->SetSettingDescription(LOCTEXT("ResolotionD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(ResolutionOptions);
 		Setting->AddGetterFunc([&]() { return GetScreenResolution(); } );
 		Setting->AddSetterFunc([&](FIntPoint Level) { SetScreenResolution(Level); ApplySettings(false); ApplyResolutionSettings(false); });
@@ -74,6 +75,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Enum* Setting = NewObject<USNGameSetting_Enum>();
 		Setting->SetSettingName(LOCTEXT("WindowMode_Loc" , "WindowMode"));
+		Setting->SetSettingDescription(LOCTEXT("WindowModeD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(WindowModeOptions);
 		Setting->AddGetterFunc([&]() { return GetFullscreenMode(); } );
 		Setting->AddSetterFunc([&](EWindowMode::Type Level) { SetFullscreenMode(Level); ApplySettings(false); });
@@ -82,6 +84,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Float* Setting = NewObject<USNGameSetting_Float>();
 		Setting->SetSettingName(LOCTEXT("ResScale_Loc" , "ResScale"));
+		Setting->SetSettingDescription(LOCTEXT("ResScaleD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->AddGetterFunc([&]() { return GetResolutionScaleNormalized(); } );
 		Setting->AddSetterFunc([&](float Level){ SetResolutionScaleNormalized(Level); ApplySettings(false); });
 		Setting->WidgetType = EWidgetType::Slider;
@@ -96,6 +99,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Bool* Setting = NewObject<USNGameSetting_Bool>();
 		Setting->SetSettingName(LOCTEXT("VSync_Loc" , "VSync"));
+		Setting->SetSettingDescription(LOCTEXT("VSyncD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(BoolOptions);
 		Setting->AddGetterFunc([&]() { return IsVSyncEnabled(); } );
 		Setting->AddSetterFunc([&](bool Level) { SetVSyncEnabled(Level); ApplySettings(false); });
@@ -104,6 +108,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("FrameLimit_Loc" , "FrameLimit"));
+		Setting->SetSettingDescription(LOCTEXT("FrameLimitD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(FrameLimitOptions);
 		Setting->AddGetterFunc([&]() { return GetFrameRateLimit(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetFrameRateLimit(Level); ApplySettings(false); });
@@ -118,6 +123,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("AntiAliasingMethod_Loc" , "Anti-Aliasing Metod"));
+		Setting->SetSettingDescription(LOCTEXT("AntiAliasingMethodD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(AAMethodOptions);
 		Setting->AddGetterFunc([&]() { return GetAAMethod(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetAAMethod(Level); ApplySettings(false); });
@@ -126,6 +132,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("MSAACount_Loc" , "MSAA Count"));
+		Setting->SetSettingDescription(LOCTEXT("MSAACountD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(MSAACountOptions);
 		Setting->AddGetterFunc([&]() { return GetMSAAQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetMSAAQuality(Level); ApplySettings(false); });
@@ -134,6 +141,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("AntiAliasing_Loc" , "Anti-Aliasing"));
+		Setting->SetSettingDescription(LOCTEXT("AntiAliasingD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetAntiAliasingQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetAntiAliasingQuality(Level); ApplySettings(false); });
@@ -142,6 +150,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Textures_Loc" , "Textures"));
+		Setting->SetSettingDescription(LOCTEXT("TexturesD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetTextureQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetTextureQuality(Level); ApplySettings(false); });	
@@ -150,6 +159,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Shadows_Loc" , "Shadows"));
+		Setting->SetSettingDescription(LOCTEXT("ShadowsD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetShadowQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetShadowQuality(Level); ApplySettings(false); });
@@ -158,6 +168,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Post Processing_Loc" , "Post Processing"));
+		Setting->SetSettingDescription(LOCTEXT("Post ProcessingD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetPostProcessingQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetPostProcessingQuality(Level); ApplySettings(false); });
@@ -166,6 +177,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Follage_Loc" , "Follage"));
+		Setting->SetSettingDescription(LOCTEXT("FollageD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetFoliageQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetFoliageQuality(Level); ApplySettings(false); });
@@ -174,6 +186,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("GlobalIllumination_Loc" , "Global Illumination"));
+		Setting->SetSettingDescription(LOCTEXT("GlobalIlluminationD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetGlobalIlluminationQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetGlobalIlluminationQuality(Level); ApplySettings(false); });
@@ -182,6 +195,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Reflection_Loc" , "Reflection"));
+		Setting->SetSettingDescription(LOCTEXT("ReflectionD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetReflectionQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetReflectionQuality(Level); ApplySettings(false); });
@@ -190,6 +204,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("Shading_Loc" , "Shading"));
+		Setting->SetSettingDescription(LOCTEXT("ShadingD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetShadingQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetShadingQuality(Level); ApplySettings(false); });
@@ -198,6 +213,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("ViewDistance_Loc" , "ViewDistance"));
+		Setting->SetSettingDescription(LOCTEXT("ViewDistanceD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		Setting->AddGetterFunc([&]() { return GetViewDistanceQuality(); } );
 		Setting->AddSetterFunc([&](int32 Level) { SetViewDistanceQuality(Level); ApplySettings(false); });
@@ -206,6 +222,7 @@ USNGameUserSettings::USNGameUserSettings()
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
 		Setting->SetSettingName(LOCTEXT("VisualEffects_Loc" , "VisualEffects"));
+		Setting->SetSettingDescription(LOCTEXT("VisualEffectsD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		/*Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Low"), 0);
 		Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Medium"), 1);*/ // как пример применения метода add option

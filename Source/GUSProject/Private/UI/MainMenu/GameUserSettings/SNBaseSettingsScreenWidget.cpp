@@ -11,7 +11,6 @@
 #include "SNSettingOptionButtonWidget.h"
 #include "SNSettingOptionSliderWidget.h"
 #include "Components/Button.h"
-#include "SNBaseSettingOptionWidget.h"
 #include "SNGameUserSettings.h"
 #include "GameFramework/GameUserSettings.h"
 
@@ -37,17 +36,25 @@ void USNBaseSettingsScreenWidget::NativeOnInitialized()
 			{
 				const auto SettingsWidget = CreateWidget<USNSettingOptionButtonWidget>(this, GameSettingButtonWidgetClass);
 				SettingsWidget->Init(Setting);
+				SettingsWidget->SetDescriptionBlockTextFunc = [&](FText HeaderText, FText DescriptionText){ SetDescriptionBlockText(HeaderText, DescriptionText); };
 				CollectionWidget->AddChildToContainer(SettingsWidget);
 			}
 			else if (Setting->WidgetType == EWidgetType::Slider)
 			{
 				const auto SettingsWidget = CreateWidget<USNSettingOptionSliderWidget>(this, GameSettingSliderWidgetClass);
 				SettingsWidget->Init(Setting);
+				SettingsWidget->SetDescriptionBlockTextFunc = [&](FText HeaderText, FText DescriptionText){ SetDescriptionBlockText(HeaderText, DescriptionText); };
 				CollectionWidget->AddChildToContainer(SettingsWidget);
 			}
 		}
 		SettingsCollectionContainer->AddChild(CollectionWidget);
 	}
+}
+
+void USNBaseSettingsScreenWidget::SetDescriptionBlockText(FText InDescriptionHeaderText, FText InDescriptionText)
+{
+	DescriptionHeader->SetText(InDescriptionHeaderText);
+	DescriptionText->SetText(InDescriptionText);
 }
 
 void USNSettingsScreenWidget_Video::NativeOnInitialized()

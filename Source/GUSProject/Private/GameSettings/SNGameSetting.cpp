@@ -7,9 +7,19 @@ FText USNGameSetting::GetSettingName() const
 	return SettingName;
 }
 
+FText USNGameSetting::GetSettingDescription() const
+{
+	return SettingDescription;
+}
+
 void USNGameSetting::SetSettingName(const FText InSettingName)
 {
 	SettingName = InSettingName;
+}
+
+void USNGameSetting::SetSettingDescription(const FText InSettingDescription)
+{
+	SettingDescription = InSettingDescription;
 }
 
 void USNGameSetting::ApplyNextOption()

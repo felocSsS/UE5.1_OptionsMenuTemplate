@@ -11,6 +11,13 @@ void USNBaseSettingOptionWidget::Init(USNGameSetting* InSetting)
 	UpdateWidgetInfo();
 }
 
+void USNBaseSettingOptionWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+
+	if (SetDescriptionBlockTextFunc) SetDescriptionBlockTextFunc(Setting->GetSettingName(), Setting->GetSettingDescription());
+}
+
 void USNBaseSettingOptionWidget::UpdateWidgetInfo()
 {
 	
