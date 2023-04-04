@@ -7,6 +7,7 @@
 #include "SNBaseSettingOptionWidget.generated.h"
 
 class USNGameSetting;
+class UTextBlock;
 
 UCLASS()
 class GUSPROJECT_API USNBaseSettingOptionWidget : public UUserWidget
@@ -17,6 +18,9 @@ public:
 	virtual void UpdateWidgetInfo();
 	
 protected:
+	UPROPERTY(meta=(BindWidget))
+	UTextBlock* SettingDisplayName;
+	
 	TWeakObjectPtr<USNGameSetting> Setting;
 	
 	virtual void Init(USNGameSetting* InSetting);

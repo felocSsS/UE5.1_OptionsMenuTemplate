@@ -20,9 +20,6 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingDisplayName;
-
-	UPROPERTY(meta=(BindWidget))
 	UTextBlock* SettingCurrentValue;
 
 	UPROPERTY(meta=(BindWidget))

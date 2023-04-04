@@ -12,6 +12,7 @@
 #include "SNSettingOptionSliderWidget.h"
 #include "Components/Button.h"
 #include "SNGameUserSettings.h"
+#include "SNSettingOptionKeySelectorWidget.h"
 #include "GameFramework/GameUserSettings.h"
 
 void USNBaseSettingsScreenWidget::NativeOnInitialized()
@@ -42,6 +43,13 @@ void USNBaseSettingsScreenWidget::NativeOnInitialized()
 			else if (Setting->WidgetType == EWidgetType::Slider)
 			{
 				const auto SettingsWidget = CreateWidget<USNSettingOptionSliderWidget>(this, GameSettingSliderWidgetClass);
+				SettingsWidget->Init(Setting);
+				SettingsWidget->SetDescriptionBlockTextFunc = [&](FText HeaderText, FText DescriptionText){ SetDescriptionBlockText(HeaderText, DescriptionText); };
+				CollectionWidget->AddChildToContainer(SettingsWidget);
+			}
+			else if (Setting->WidgetType == EWidgetType::KeySelector)
+			{
+				const auto SettingsWidget = CreateWidget<USNSettingOptionKeySelectorWidget>(this, GameSettingKeySelectorWidgetClass);
 				SettingsWidget->Init(Setting);
 				SettingsWidget->SetDescriptionBlockTextFunc = [&](FText HeaderText, FText DescriptionText){ SetDescriptionBlockText(HeaderText, DescriptionText); };
 				CollectionWidget->AddChildToContainer(SettingsWidget);
@@ -107,5 +115,7 @@ void USNSettingsScreenWidget_Gameplay::NativeOnInitialized()
 
 void USNSettingsScreenWidget_MouseAndKeyboard::NativeOnInitialized()
 {
+	GameSettingInitializer = NewObject<USNGameSettingInitializer_MouseAndKeyboard>();
+	
 	Super::NativeOnInitialized();
 }

@@ -4,15 +4,34 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Framework/Commands/InputChord.h"
 #include "SNGameSetting.generated.h"
 
 UENUM()
 enum EWidgetType
 {
 	Standard,
-	Slider
+	Slider,
+	KeySelector
 	// maybe more in feature
 };
+
+UENUM()
+enum EInputType
+{
+	Action,
+	Axis
+};
+
+USTRUCT()
+struct FSelectedKeys_Action
+{
+	GENERATED_BODY()
+
+	FInputChord FirstSelectedKey;
+	FInputChord SecondSelectedKey;
+};
+
 
 UCLASS()
 class GUSPROJECT_API USNGameSetting : public UObject
@@ -30,6 +49,9 @@ public:
 	virtual FText GetCurrentOptionName() const;
 	// for Resolution scale only
 	virtual void SetValue(float Percent);
+	// for KeySelector widget
+	virtual void SetValue(FName ActionName, FSelectedKeys_Action Keys);
+	virtual FSelectedKeys_Action GetSelectedKeys() const;
 
 	EWidgetType WidgetType = EWidgetType::Standard;
 	
@@ -160,7 +182,7 @@ public:
 	float GetCurrentValue() const;
 	
 	// for Resolution scale only
-	virtual void SetValue(float Percent);
+	virtual void SetValue(float Percent) override;
 	
 protected:
 
@@ -204,4 +226,40 @@ private:
 	bool GetCurrentValue() const;
 	void SetCurrentValue(bool InValue);
 	
+};
+
+UCLASS()
+class USNGameSetting_KeySelector_Base : public USNGameSetting
+{
+	GENERATED_BODY()
+	
+public:
+	void SetActionOrAxisName(FName InName);
+	void SetInputType(EInputType InInputType);
+	EInputType GetInputType() const;
+	FName GetActionOrAxisName() const;
+	
+protected:
+	FName ActionOrAxisName;
+	
+private:
+	EInputType InputType;
+};
+
+UCLASS()
+class USNGameSetting_KeySelector_Action : public USNGameSetting_KeySelector_Base
+{
+	GENERATED_BODY()
+	
+public:
+	void AddGetterFunc(TFunction<FSelectedKeys_Action(FName)> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(FName, FSelectedKeys_Action)> InSetterFunc);
+	FSelectedKeys_Action GetSelectedKeys() const;
+	virtual void SetValue(FName ActionName, FSelectedKeys_Action Keys) override;
+
+protected:
+
+private:
+	TFunction<FSelectedKeys_Action(FName)> GetterFunc;
+	TFunction<void(FName, FSelectedKeys_Action)> SetterFunc;
 };

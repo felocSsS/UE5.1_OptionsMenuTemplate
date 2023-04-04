@@ -2,6 +2,7 @@
 
 #include "UI/MainMenu/GameUserSettings/SNBaseSettingOptionWidget.h"
 #include "GameSettings/SNGameSetting.h"
+#include "Components/TextBlock.h"
 
 void USNBaseSettingOptionWidget::Init(USNGameSetting* InSetting)
 {

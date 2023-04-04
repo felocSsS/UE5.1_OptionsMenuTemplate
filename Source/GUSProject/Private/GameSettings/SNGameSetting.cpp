@@ -39,6 +39,15 @@ void USNGameSetting::SetValue(float Percent)
 {
 }
 
+void USNGameSetting::SetValue(FName ActionName, FSelectedKeys_Action Keys)
+{
+}
+
+FSelectedKeys_Action USNGameSetting::GetSelectedKeys() const
+{
+	return FSelectedKeys_Action{};
+}
+
 /*
  *  USNGameSetting_Number cpp
  */
@@ -343,4 +352,54 @@ void USNGameSetting_Bool::SetCurrentValue(bool InValue)
 	if (!SetterFunc) return;
 
 	SetterFunc(InValue);
+}
+
+/*
+ *  USNGameSetting_KeySelector_Base cpp
+ */
+
+void USNGameSetting_KeySelector_Base::SetActionOrAxisName(FName InName)
+{
+	ActionOrAxisName = InName;
+}
+
+void USNGameSetting_KeySelector_Base::SetInputType(EInputType InInputType)
+{
+	InputType = InInputType;
+}
+
+EInputType USNGameSetting_KeySelector_Base::GetInputType() const
+{
+	return InputType;
+}
+
+FName USNGameSetting_KeySelector_Base::GetActionOrAxisName() const
+{
+	return ActionOrAxisName;
+}
+
+/*
+ *  USNGameSetting_KeySelector_Action cpp
+ */
+
+void USNGameSetting_KeySelector_Action::AddGetterFunc(TFunction<FSelectedKeys_Action(FName)> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_KeySelector_Action::AddSetterFunc(const TFunction<void(FName, FSelectedKeys_Action)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+FSelectedKeys_Action USNGameSetting_KeySelector_Action::GetSelectedKeys() const
+{
+	if (!GetterFunc) return FSelectedKeys_Action{};
+
+	return GetterFunc(ActionOrAxisName);
+}
+
+void USNGameSetting_KeySelector_Action::SetValue(FName ActionName, FSelectedKeys_Action Keys)
+{
+	if (SetterFunc) SetterFunc(ActionName, Keys);
 }

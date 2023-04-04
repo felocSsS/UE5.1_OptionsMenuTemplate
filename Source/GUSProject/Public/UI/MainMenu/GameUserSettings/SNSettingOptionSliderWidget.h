@@ -19,9 +19,6 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingDisplayName;
-	
-	UPROPERTY(meta=(BindWidget))
 	USlider* ProgressSlider;
 
 	virtual void NativeOnInitialized() override;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SNGameSetting.h"
 #include "UObject/NoExportTypes.h"
 #include "SNGameSettingInitializer.generated.h"
 
@@ -36,4 +37,19 @@ protected:
 
 private:
 	
+};
+
+UCLASS()
+class GUSPROJECT_API USNGameSettingInitializer_MouseAndKeyboard : public USNGameSettingInitializer
+{
+	GENERATED_BODY()
+
+public:
+	virtual void Init() override;
+	
+protected:
+
+private:
+	FSelectedKeys_Action GetSelectedKeys_Action(FName ActionName) const;
+	void SetKeys_Action(FName InActionName, FSelectedKeys_Action Keys);
 };

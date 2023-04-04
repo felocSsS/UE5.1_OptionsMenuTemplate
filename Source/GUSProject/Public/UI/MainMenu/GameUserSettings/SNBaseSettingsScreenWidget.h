@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<USNBaseSettingOptionWidget> GameSettingSliderWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<USNBaseSettingOptionWidget> GameSettingKeySelectorWidgetClass;
+
 	UPROPERTY(meta=(BindWidget))
 	UVerticalBox* SettingsCollectionContainer;
 

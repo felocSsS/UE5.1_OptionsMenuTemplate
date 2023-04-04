@@ -221,7 +221,8 @@ USNGameUserSettings::USNGameUserSettings()
 	}
 	{
 		USNGameSetting_Number* Setting = NewObject<USNGameSetting_Number>();
-		Setting->SetSettingName(LOCTEXT("VisualEffects_Loc" , "VisualEffects"));
+		const auto DefaultName = FText::Format(LOCTEXT("CompanyNameFormat", "{0} Corp"), FText::FromString("hiy"));
+		Setting->SetSettingName(LOCTEXT("VisualEffects_Loc", "Visual Effects"));
 		Setting->SetSettingDescription(LOCTEXT("VisualEffectsD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->SetOptions(VFXOptions);
 		/*Setting->AddOption(LOCTEXT("VFXQualityLow_Loc", "Low"), 0);
