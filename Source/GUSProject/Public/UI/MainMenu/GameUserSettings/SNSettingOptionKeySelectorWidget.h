@@ -7,6 +7,7 @@
 #include "SNSettingOptionKeySelectorWidget.generated.h"
 
 class UInputKeySelector;
+class UButton;
 
 UCLASS()
 class GUSPROJECT_API USNSettingOptionKeySelectorWidget : public USNBaseSettingOptionWidget
@@ -23,17 +24,25 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	UInputKeySelector* SecondKeySelector;
 
+	UPROPERTY(meta=(BindWidget))
+	UButton* DeleteKeyButton;
+
 	virtual void NativeOnInitialized() override;
 	
 private:
 	UFUNCTION()
-	void OnKeySelected(FInputChord Key);
-	
+	void OnKeySelected1(FInputChord Key);
+	UFUNCTION()
+	void OnKeySelected2(FInputChord Key);
 	UFUNCTION()
 	void OnIsSelectingKeyChanged_1();
+	UFUNCTION()
 	void OnIsSelectingKeyChanged_2();
+	UFUNCTION()
+	void OnDeleteKeyButtonClick();
+
+	void SaveKeys();
 
 	FInputChord LastSelectedKey;
-
-	bool IsStartKeyChanged = false;
+	
 };

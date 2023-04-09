@@ -31,15 +31,38 @@ void USNGameSettingInitializer_Video::Init()
 void USNGameSettingInitializer_MouseAndKeyboard::Init()
 {
 	const auto DisplaySettingsCollection = NewObject<USNGameSettingCollection>();
-	DisplaySettingsCollection->SetCollectionName(FText::FromString("Display"));
+	DisplaySettingsCollection->SetCollectionName(FText::FromString("KeyMapping"));
 	{
 		USNGameSetting_KeySelector_Action* Setting = NewObject<USNGameSetting_KeySelector_Action>();
-		Setting->SetSettingName(LOCTEXT("AntiAliasingMethod_Loc" , "Jump"));
-		Setting->SetSettingDescription(LOCTEXT("AntiAliasingMethodD_Loc", "Lorem ipsum dolor sit amet description"));
+		Setting->SetSettingName(LOCTEXT("Jump_Loc" , "Jump"));
+		Setting->SetSettingDescription(LOCTEXT("JumpD_Loc", "Lorem ipsum dolor sit amet description"));
 		Setting->AddGetterFunc([&](FName ActionName) { return GetSelectedKeys_Action(ActionName); } );
-		Setting->AddSetterFunc([&](FName ActionName, FSelectedKeys_Action Keys) { SetKeys_Action(ActionName, Keys); });
+		Setting->AddSetterFunc([&](FName ActionName, FSelectedKeys Keys) { SetKeys_Action(ActionName, Keys); });
 		Setting->SetActionOrAxisName("Jump");
-		Setting->SetInputType(EInputType::Action);
+		Setting->WidgetType = EWidgetType::KeySelector;
+		DisplaySettingsCollection->AddSettingToCollection(Setting);
+	}
+	{
+		USNGameSetting_KeySelector_Axis* Setting = NewObject<USNGameSetting_KeySelector_Axis>();
+		Setting->SetSettingName(LOCTEXT("MoveForward_Loc" , "Move forward"));
+		Setting->SetSettingDescription(LOCTEXT("MoveForwardD_Loc", "Lorem ipsum dolor sit amet description"));
+		Setting->AddGetterFunc([&](FName AxisName) { return GetSelectedKeys_Axis(AxisName); } );
+		Setting->AddSetterFunc([&](FName AxisName, FSelectedKeys Keys, float Scale) { SetKeys_Axis(AxisName, Keys, Scale); });
+		Setting->SetActionOrAxisName("MoveForward");
+		Setting->SetInputType(EInputType::Axis);
+		Setting->SetScaleType(EScaleType::Positive);
+		Setting->WidgetType = EWidgetType::KeySelector;
+		DisplaySettingsCollection->AddSettingToCollection(Setting);
+	}
+	{
+		USNGameSetting_KeySelector_Axis* Setting = NewObject<USNGameSetting_KeySelector_Axis>();
+		Setting->SetSettingName(LOCTEXT("MoveBackward_Loc" , "Move backward"));
+		Setting->SetSettingDescription(LOCTEXT("MoveBackwardD_Loc", "Lorem ipsum dolor sit amet description"));
+		Setting->AddGetterFunc([&](FName AxisName) { return GetSelectedKeys_Axis(AxisName); } );
+		Setting->AddSetterFunc([&](FName AxisName, FSelectedKeys Keys, float Scale) { SetKeys_Axis(AxisName, Keys, Scale); });
+		Setting->SetActionOrAxisName("MoveBackward");
+		Setting->SetInputType(EInputType::Axis);
+		Setting->SetScaleType(EScaleType::Negative);
 		Setting->WidgetType = EWidgetType::KeySelector;
 		DisplaySettingsCollection->AddSettingToCollection(Setting);
 	}
@@ -47,7 +70,9 @@ void USNGameSettingInitializer_MouseAndKeyboard::Init()
 	SettingCollections.Add(DisplaySettingsCollection);
 }
 
-FSelectedKeys_Action USNGameSettingInitializer_MouseAndKeyboard::GetSelectedKeys_Action(FName ActionName) const
+// action type function
+
+FSelectedKeys USNGameSettingInitializer_MouseAndKeyboard::GetSelectedKeys_Action(FName ActionName) const
 {
 	const UInputSettings* InputSettings = UInputSettings::GetInputSettings();
 
@@ -63,14 +88,14 @@ FSelectedKeys_Action USNGameSettingInitializer_MouseAndKeyboard::GetSelectedKeys
 	if (Keys.IsValidIndex(1))
 		SecondKey.Key = Keys[0].Key; SecondKey.bAlt = Keys[0].bAlt; SecondKey.bCmd = Keys[0].bCmd; SecondKey.bCtrl = Keys[0].bCtrl; SecondKey.bShift = Keys[0].bShift;
 	
-	return FSelectedKeys_Action
+	return FSelectedKeys
 	{
 		FirstKey,
 		SecondKey
 	};
 }
 
-void USNGameSettingInitializer_MouseAndKeyboard::SetKeys_Action(FName InActionName, FSelectedKeys_Action Keys)
+void USNGameSettingInitializer_MouseAndKeyboard::SetKeys_Action(FName InActionName, FSelectedKeys Keys)
 {
 	UInputSettings* InputSettings = UInputSettings::GetInputSettings();
 
@@ -88,6 +113,51 @@ void USNGameSettingInitializer_MouseAndKeyboard::SetKeys_Action(FName InActionNa
 	
 	InputSettings->AddActionMapping(FirstKey);
 	InputSettings->AddActionMapping(SecondKey);
+}
+
+// axis type function
+
+FSelectedKeys USNGameSettingInitializer_MouseAndKeyboard::GetSelectedKeys_Axis(FName ActionName) const
+{
+	const UInputSettings* InputSettings = UInputSettings::GetInputSettings();
+	
+	TArray<FInputAxisKeyMapping> Keys;
+	InputSettings->GetAxisMappingByName(ActionName, Keys);
+
+	FInputChord FirstKey;
+	FInputChord SecondKey;
+
+	if (Keys.IsValidIndex(0))
+		FirstKey.Key = Keys[1].Key; 
+
+	if (Keys.IsValidIndex(1))
+		SecondKey.Key = Keys[0].Key; 
+	
+	return FSelectedKeys
+	{
+		FirstKey,
+		SecondKey
+	};
+}
+
+void USNGameSettingInitializer_MouseAndKeyboard::SetKeys_Axis(FName InActionName, FSelectedKeys Keys, float Scale)
+{
+	UInputSettings* InputSettings = UInputSettings::GetInputSettings();
+
+	TArray<FInputAxisKeyMapping> KeysToDelete;
+	InputSettings->GetAxisMappingByName(InActionName, KeysToDelete);
+	
+	for (auto KeyMapping : KeysToDelete)
+		InputSettings->RemoveAxisMapping(KeyMapping);
+	
+	FInputAxisKeyMapping FirstKey;
+	FInputAxisKeyMapping SecondKey;
+	
+	FirstKey.AxisName = InActionName; FirstKey.Key = Keys.FirstSelectedKey.Key; FirstKey.Scale = Scale;
+	SecondKey.AxisName = InActionName; SecondKey.Key = Keys.SecondSelectedKey.Key; SecondKey.Scale = Scale;
+	
+	InputSettings->AddAxisMapping(FirstKey);
+	InputSettings->AddAxisMapping(SecondKey);
 }
 
 #undef LOCTEXT_NAMESPACE

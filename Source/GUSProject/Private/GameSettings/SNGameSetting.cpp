@@ -39,13 +39,17 @@ void USNGameSetting::SetValue(float Percent)
 {
 }
 
-void USNGameSetting::SetValue(FName ActionName, FSelectedKeys_Action Keys)
+void USNGameSetting::SetValue(FName ActionName, FSelectedKeys Keys)
 {
 }
 
-FSelectedKeys_Action USNGameSetting::GetSelectedKeys() const
+void USNGameSetting::SetValue(FName ActionName, FSelectedKeys Keys, float Scale)
 {
-	return FSelectedKeys_Action{};
+}
+
+FSelectedKeys USNGameSetting::GetSelectedKeys() const
+{
+	return FSelectedKeys{};
 }
 
 /*
@@ -363,6 +367,12 @@ void USNGameSetting_KeySelector_Base::SetActionOrAxisName(FName InName)
 	ActionOrAxisName = InName;
 }
 
+
+FName USNGameSetting_KeySelector_Base::GetActionOrAxisName() const
+{
+	return ActionOrAxisName;
+}
+
 void USNGameSetting_KeySelector_Base::SetInputType(EInputType InInputType)
 {
 	InputType = InInputType;
@@ -373,33 +383,74 @@ EInputType USNGameSetting_KeySelector_Base::GetInputType() const
 	return InputType;
 }
 
-FName USNGameSetting_KeySelector_Base::GetActionOrAxisName() const
-{
-	return ActionOrAxisName;
-}
-
 /*
  *  USNGameSetting_KeySelector_Action cpp
  */
 
-void USNGameSetting_KeySelector_Action::AddGetterFunc(TFunction<FSelectedKeys_Action(FName)> InGetterFunc)
+void USNGameSetting_KeySelector_Action::AddGetterFunc(TFunction<FSelectedKeys(FName)> InGetterFunc)
 {
 	GetterFunc = InGetterFunc;
 }
 
-void USNGameSetting_KeySelector_Action::AddSetterFunc(const TFunction<void(FName, FSelectedKeys_Action)> InSetterFunc)
+void USNGameSetting_KeySelector_Action::AddSetterFunc(const TFunction<void(FName, FSelectedKeys)> InSetterFunc)
 {
 	SetterFunc = InSetterFunc;
 }
 
-FSelectedKeys_Action USNGameSetting_KeySelector_Action::GetSelectedKeys() const
+FSelectedKeys USNGameSetting_KeySelector_Action::GetSelectedKeys() const
 {
-	if (!GetterFunc) return FSelectedKeys_Action{};
+	if (!GetterFunc) return FSelectedKeys{};
 
 	return GetterFunc(ActionOrAxisName);
 }
 
-void USNGameSetting_KeySelector_Action::SetValue(FName ActionName, FSelectedKeys_Action Keys)
+void USNGameSetting_KeySelector_Action::SetValue(FName ActionName, FSelectedKeys Keys)
 {
 	if (SetterFunc) SetterFunc(ActionName, Keys);
+}
+
+/*
+ *  USNGameSetting_KeySelector_Axis cpp
+ */
+
+void USNGameSetting_KeySelector_Axis::AddGetterFunc(TFunction<FSelectedKeys(FName)> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_KeySelector_Axis::AddSetterFunc(const TFunction<void(FName, FSelectedKeys, float)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+FSelectedKeys USNGameSetting_KeySelector_Axis::GetSelectedKeys() const
+{
+	if (!GetterFunc) return FSelectedKeys{};
+
+	return GetterFunc(ActionOrAxisName);
+}
+
+void USNGameSetting_KeySelector_Axis::SetValue(FName AxisName, FSelectedKeys Keys, float Scale)
+{
+	if (SetterFunc) SetterFunc(AxisName, Keys, Scale);
+}
+
+float USNGameSetting_KeySelector_Axis::GetScaleType() const
+{
+	switch (ScaleType)
+	{
+	case Positive:
+		return 1.0f;
+		
+	case Negative:
+		return -1.0f;
+
+	default:
+		return 1.0f;	
+	}
+}
+
+void USNGameSetting_KeySelector_Axis::SetScaleType(EScaleType InScaleType)
+{
+	ScaleType = InScaleType;
 }

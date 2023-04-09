@@ -50,6 +50,9 @@ public:
 protected:
 
 private:
-	FSelectedKeys_Action GetSelectedKeys_Action(FName ActionName) const;
-	void SetKeys_Action(FName InActionName, FSelectedKeys_Action Keys);
+	FSelectedKeys GetSelectedKeys_Action(FName ActionName) const;
+	void SetKeys_Action(FName InActionName, FSelectedKeys Keys);
+
+	FSelectedKeys GetSelectedKeys_Axis(FName ActionName) const;
+	void SetKeys_Axis(FName InActionName, FSelectedKeys Keys, float Scale);
 };

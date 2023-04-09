@@ -16,15 +16,8 @@ enum EWidgetType
 	// maybe more in feature
 };
 
-UENUM()
-enum EInputType
-{
-	Action,
-	Axis
-};
-
 USTRUCT()
-struct FSelectedKeys_Action
+struct FSelectedKeys
 {
 	GENERATED_BODY()
 
@@ -50,8 +43,9 @@ public:
 	// for Resolution scale only
 	virtual void SetValue(float Percent);
 	// for KeySelector widget
-	virtual void SetValue(FName ActionName, FSelectedKeys_Action Keys);
-	virtual FSelectedKeys_Action GetSelectedKeys() const;
+	virtual void SetValue(FName ActionName, FSelectedKeys Keys);
+	virtual void SetValue(FName ActionName, FSelectedKeys Keys, float Scale);
+	virtual FSelectedKeys GetSelectedKeys() const;
 
 	EWidgetType WidgetType = EWidgetType::Standard;
 	
@@ -228,6 +222,13 @@ private:
 	
 };
 
+UENUM()
+enum EInputType
+{
+	Action,
+	Axis
+};
+
 UCLASS()
 class USNGameSetting_KeySelector_Base : public USNGameSetting
 {
@@ -235,15 +236,16 @@ class USNGameSetting_KeySelector_Base : public USNGameSetting
 	
 public:
 	void SetActionOrAxisName(FName InName);
+	FName GetActionOrAxisName() const;
 	void SetInputType(EInputType InInputType);
 	EInputType GetInputType() const;
-	FName GetActionOrAxisName() const;
 	
 protected:
 	FName ActionOrAxisName;
+	EInputType InputType;
 	
 private:
-	EInputType InputType;
+	
 };
 
 UCLASS()
@@ -252,14 +254,42 @@ class USNGameSetting_KeySelector_Action : public USNGameSetting_KeySelector_Base
 	GENERATED_BODY()
 	
 public:
-	void AddGetterFunc(TFunction<FSelectedKeys_Action(FName)> InGetterFunc);
-	void AddSetterFunc(const TFunction<void(FName, FSelectedKeys_Action)> InSetterFunc);
-	FSelectedKeys_Action GetSelectedKeys() const;
-	virtual void SetValue(FName ActionName, FSelectedKeys_Action Keys) override;
+	void AddGetterFunc(TFunction<FSelectedKeys(FName)> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(FName, FSelectedKeys)> InSetterFunc);
+	FSelectedKeys GetSelectedKeys() const;
+	virtual void SetValue(FName ActionName, FSelectedKeys Keys) override;
 
 protected:
 
 private:
-	TFunction<FSelectedKeys_Action(FName)> GetterFunc;
-	TFunction<void(FName, FSelectedKeys_Action)> SetterFunc;
+	TFunction<FSelectedKeys(FName)> GetterFunc;
+	TFunction<void(FName, FSelectedKeys)> SetterFunc;
+};
+
+UENUM()
+enum EScaleType
+{
+	Positive,
+	Negative
+};
+
+UCLASS()
+class USNGameSetting_KeySelector_Axis : public USNGameSetting_KeySelector_Base
+{
+	GENERATED_BODY()
+	
+public:
+	void AddGetterFunc(TFunction<FSelectedKeys(FName)> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(FName, FSelectedKeys, float)> InSetterFunc);
+	virtual FSelectedKeys GetSelectedKeys() const override;
+	virtual void SetValue(FName AxisName, FSelectedKeys Keys, float Scale) override;
+	void SetScaleType(EScaleType InScaleType);
+	float GetScaleType() const;
+
+protected:
+
+private:
+	TFunction<FSelectedKeys(FName)> GetterFunc;
+	TFunction<void(FName, FSelectedKeys, float)> SetterFunc;
+	EScaleType ScaleType;
 };
