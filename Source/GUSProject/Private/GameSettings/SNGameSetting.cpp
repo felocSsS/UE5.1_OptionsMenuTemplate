@@ -9,7 +9,7 @@ FText USNGameSetting::GetSettingName() const
 
 FText USNGameSetting::GetSettingDescription() const
 {
-	return SettingDescription;
+	return SettingDescription; 
 }
 
 void USNGameSetting::SetSettingName(const FText InSettingName)
@@ -262,6 +262,72 @@ void USNGameSetting_IntPoint::SetCurrentValue(FIntPoint InValue)
 	SetterFunc(InValue);
 }
 
+void USNGameSetting_String::AddGetterFunc(TFunction<FString()> InGetterFunc)
+{
+	GetterFunc = InGetterFunc;
+}
+
+void USNGameSetting_String::AddSetterFunc(const TFunction<void(FString)> InSetterFunc)
+{
+	SetterFunc = InSetterFunc;
+}
+
+void USNGameSetting_String::AddOption(FText InOptionDisplayName, FString InOptionValue)
+{
+	StringOptions.Add(FOptionString{InOptionDisplayName, InOptionValue});
+}
+
+void USNGameSetting_String::SetOptions(const TArray<FOptionString>& InOptions)
+{
+	StringOptions = InOptions;
+}
+
+void USNGameSetting_String::ApplyNextOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+
+	const int32 NextIndex = (CurrentIndex + 1) % StringOptions.Num();
+	SetCurrentValue(StringOptions[NextIndex].Value);
+}
+
+void USNGameSetting_String::ApplyPreviousOption()
+{
+	const int32 CurrentIndex = GetCurrentIndex();
+	if (CurrentIndex == INDEX_NONE) return;
+
+	const int32 PreviousIndex = CurrentIndex == 0 ? StringOptions.Num() - 1 : CurrentIndex - 1;
+	SetCurrentValue(StringOptions[PreviousIndex].Value);
+}
+
+FText USNGameSetting_String::GetCurrentOptionName() const
+{
+	const FString CurrentValue = GetCurrentValue();
+	const auto Option = StringOptions.FindByPredicate([&](const FOptionString& Opt) { return CurrentValue == Opt.Value;} );
+	if (!Option) return FText();
+	return Option->DisplayValue;
+}
+
+int32 USNGameSetting_String::GetCurrentIndex() const
+{
+	const FString CurrentValue = GetCurrentValue();
+	return StringOptions.IndexOfByPredicate([&](const FOptionString& Opt){ return CurrentValue == Opt.Value; });
+}
+
+FString USNGameSetting_String::GetCurrentValue() const
+{
+	if (!GetterFunc) return "";
+
+	return GetterFunc();
+}
+
+void USNGameSetting_String::SetCurrentValue(FString InValue)
+{
+	if (!SetterFunc) return;
+
+	SetterFunc(InValue);
+}
+
 /*
  *  USNGameSetting_float cpp
  */
@@ -282,6 +348,17 @@ float USNGameSetting_Float::GetCurrentValue() const
 
 	return GetterFunc();
 }
+
+void USNGameSetting_Float::SetMinMaxSliderValue(FMinMaxSliderValue MinMax)
+{
+	MinMaxSliderValue = MinMax;
+}
+
+FMinMaxSliderValue USNGameSetting_Float::GetMinMaxSliderValue()
+{
+	return MinMaxSliderValue;
+}
+
 
 void USNGameSetting_Float::SetValue(float Percent)
 {

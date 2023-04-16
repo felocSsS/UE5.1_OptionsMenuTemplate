@@ -9,7 +9,7 @@
 class USNGameSetting;
 class UTextBlock;
 
-UCLASS()
+UCLASS(Abstract)
 class GUSPROJECT_API USNBaseSettingOptionWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -19,9 +19,10 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingDisplayName;
-	
-	TWeakObjectPtr<USNGameSetting> Setting;
+	TObjectPtr<UTextBlock> SettingDisplayName;
+
+	UPROPERTY()
+	TObjectPtr<USNGameSetting> Setting;
 	
 	virtual void Init(USNGameSetting* InSetting);
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

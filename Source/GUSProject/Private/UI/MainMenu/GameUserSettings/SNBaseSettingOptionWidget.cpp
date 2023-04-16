@@ -6,8 +6,8 @@
 
 void USNBaseSettingOptionWidget::Init(USNGameSetting* InSetting)
 {
-	Setting = MakeWeakObjectPtr(InSetting);
-	if (!Setting.IsValid()) return;
+	Setting = InSetting;
+	if (!Setting) return;
 
 	UpdateWidgetInfo();
 }
@@ -16,7 +16,8 @@ void USNBaseSettingOptionWidget::NativeOnMouseEnter(const FGeometry& InGeometry,
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 
-	if (SetDescriptionBlockTextFunc) SetDescriptionBlockTextFunc(Setting->GetSettingName(), Setting->GetSettingDescription());
+	if (SetDescriptionBlockTextFunc && Setting)
+		SetDescriptionBlockTextFunc(Setting->GetSettingName(), Setting->GetSettingDescription());
 }
 
 void USNBaseSettingOptionWidget::UpdateWidgetInfo()

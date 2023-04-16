@@ -5,6 +5,13 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 
+void USNGameSettingCollectionWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	SettingsContainer->ClearChildren();
+}
+
 void USNGameSettingCollectionWidget::SetCollectionHeaderText(FText InText)
 {
 	SettingCollectionHeader->SetText(InText);

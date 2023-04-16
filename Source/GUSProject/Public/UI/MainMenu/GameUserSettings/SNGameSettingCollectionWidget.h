@@ -22,10 +22,12 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingCollectionHeader;
+	TObjectPtr<UTextBlock> SettingCollectionHeader;
 
 	UPROPERTY(meta=(BindWidget))
-	UVerticalBox* SettingsContainer;
+	TObjectPtr<UVerticalBox> SettingsContainer;
+
+	virtual void NativeOnInitialized() override;
 	
 private:
 	

@@ -24,5 +24,5 @@ protected:
 private:
 	FText CollectionName;
 	UPROPERTY()
-	TArray<USNGameSetting*> Settings;
+	TArray<TObjectPtr<USNGameSetting>> Settings;
 };

@@ -6,6 +6,7 @@
 #include "Components/InputKeySelector.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Kismet/KismetStringLibrary.h"
 
 void USNSettingOptionKeySelectorWidget::NativeOnInitialized()
 {
@@ -22,17 +23,21 @@ void USNSettingOptionKeySelectorWidget::NativeOnInitialized()
 
 void USNSettingOptionKeySelectorWidget::OnKeySelected1(FInputChord Key)
 {
-	SecondKeySelector->SelectedKey == Key || Key == LastSelectedKey  ? FirstKeySelector->SetSelectedKey(LastSelectedKey) : SaveKeys();
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, "Key: " + Key.Key.ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, UKismetStringLibrary::Conv_BoolToString(SecondKeySelector->SelectedKey == Key || Key == LastSelectedKey));
+	(SecondKeySelector->SelectedKey == Key && SecondKeySelector->SelectedKey != FInputChord{}) && Key == LastSelectedKey ? FirstKeySelector->SetSelectedKey(LastSelectedKey) : SaveKeys();
 }
 
 void USNSettingOptionKeySelectorWidget::OnKeySelected2(FInputChord Key)
 {
-	FirstKeySelector->SelectedKey == Key || Key == LastSelectedKey ? SecondKeySelector->SetSelectedKey(LastSelectedKey) : SaveKeys();
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, UKismetStringLibrary::Conv_BoolToString(FirstKeySelector->SelectedKey == Key || Key == LastSelectedKey));
+	(FirstKeySelector->SelectedKey == Key && FirstKeySelector->SelectedKey != FInputChord{}) && Key == LastSelectedKey ? SecondKeySelector->SetSelectedKey(LastSelectedKey) : SaveKeys();
 }
 
 void USNSettingOptionKeySelectorWidget::SaveKeys()
 {
-	if (!Setting.IsValid()) return;
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, "JJOJOJOJOJOJ");
+	if (!Setting) return;
 
 	const auto CastedSetting = Cast<USNGameSetting_KeySelector_Base>(Setting);
 
@@ -72,17 +77,15 @@ void USNSettingOptionKeySelectorWidget::OnDeleteKeyButtonClick()
 		return;
 	}
 	if (FirstKeySelector->SelectedKey != FInputChord{})
-	{
 		FirstKeySelector->SetSelectedKey(FInputChord{});
-	}
 }
 
 void USNSettingOptionKeySelectorWidget::UpdateWidgetInfo()
 {
-	if (Setting.IsValid())
+	if (Setting)
 	{
 		SettingDisplayName->SetText(Setting->GetSettingName());
-		FSelectedKeys CurrentKeys = Setting->GetSelectedKeys();
+		const FSelectedKeys CurrentKeys = Setting->GetSelectedKeys();
 
 		FirstKeySelector->SelectedKey = CurrentKeys.FirstSelectedKey;
 		SecondKeySelector->SelectedKey = CurrentKeys.SecondSelectedKey;

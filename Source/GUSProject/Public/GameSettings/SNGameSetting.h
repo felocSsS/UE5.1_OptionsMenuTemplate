@@ -26,7 +26,7 @@ struct FSelectedKeys
 };
 
 
-UCLASS()
+UCLASS(Abstract)
 class GUSPROJECT_API USNGameSetting : public UObject
 {
 	GENERATED_BODY()
@@ -165,6 +165,51 @@ private:
 	void SetCurrentValue(FIntPoint InValue);
 };
 
+USTRUCT()
+struct FOptionString
+{
+	GENERATED_BODY()
+
+	FText DisplayValue;
+	FString Value;
+};
+
+UCLASS()
+class USNGameSetting_String : public USNGameSetting
+{
+	GENERATED_BODY()
+	
+public:
+	void AddGetterFunc(TFunction<FString()> InGetterFunc);
+	void AddSetterFunc(const TFunction<void(FString)> InSetterFunc);
+	void AddOption(FText InOptionDisplayName, FString InOptionValue);
+	void SetOptions(const TArray<FOptionString>& InOptions);
+
+	virtual void ApplyNextOption() override;
+	virtual void ApplyPreviousOption() override;
+	virtual FText GetCurrentOptionName() const override;
+
+protected:
+
+private:
+	TArray<FOptionString> StringOptions;
+	TFunction<FString()> GetterFunc;
+	TFunction<void(FString)> SetterFunc;
+
+	int32 GetCurrentIndex() const;
+	FString GetCurrentValue() const;
+	void SetCurrentValue(FString InValue);
+};
+
+USTRUCT()
+struct FMinMaxSliderValue
+{
+	GENERATED_BODY()
+
+	float Min;
+	float Max;
+};
+
 UCLASS()
 class USNGameSetting_Float : public USNGameSetting
 {
@@ -175,7 +220,9 @@ public:
 	void AddSetterFunc(const TFunction<void(float)> InSetterFunc);
 	float GetCurrentValue() const;
 	
-	// for Resolution scale only
+	void SetMinMaxSliderValue(FMinMaxSliderValue MinMax);
+	FMinMaxSliderValue GetMinMaxSliderValue();
+	
 	virtual void SetValue(float Percent) override;
 	
 protected:
@@ -183,6 +230,8 @@ protected:
 private:
 	TFunction<float()> GetterFunc;
 	TFunction<void(float)> SetterFunc;
+
+	FMinMaxSliderValue MinMaxSliderValue;
 };
 
 USTRUCT()
@@ -229,7 +278,7 @@ enum EInputType
 	Axis
 };
 
-UCLASS()
+UCLASS(Abstract)
 class USNGameSetting_KeySelector_Base : public USNGameSetting
 {
 	GENERATED_BODY()
@@ -256,7 +305,7 @@ class USNGameSetting_KeySelector_Action : public USNGameSetting_KeySelector_Base
 public:
 	void AddGetterFunc(TFunction<FSelectedKeys(FName)> InGetterFunc);
 	void AddSetterFunc(const TFunction<void(FName, FSelectedKeys)> InSetterFunc);
-	FSelectedKeys GetSelectedKeys() const;
+	virtual FSelectedKeys GetSelectedKeys() const override;
 	virtual void SetValue(FName ActionName, FSelectedKeys Keys) override;
 
 protected:
@@ -287,7 +336,7 @@ public:
 	float GetScaleType() const;
 
 protected:
-
+	
 private:
 	TFunction<FSelectedKeys(FName)> GetterFunc;
 	TFunction<void(FName, FSelectedKeys, float)> SetterFunc;

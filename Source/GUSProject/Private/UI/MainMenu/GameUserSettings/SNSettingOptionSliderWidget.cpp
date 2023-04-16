@@ -14,17 +14,24 @@ void USNSettingOptionSliderWidget::NativeOnInitialized()
 
 void USNSettingOptionSliderWidget::UpdateWidgetInfo()
 {
-	if (Setting.IsValid())
+	if (Setting)
 	{
 		SettingDisplayName->SetText(Setting->GetSettingName());
 		ProgressSlider->SetValue(Cast<USNGameSetting_Float>(Setting)->GetCurrentValue());
 	}
 }
 
+void USNSettingOptionSliderWidget::Init(USNGameSetting* InSetting)
+{
+	Super::Init(InSetting);
+
+	const auto FloatSetting = Cast<USNGameSetting_Float>(Setting);
+	ProgressSlider->SetMinValue(FloatSetting->GetMinMaxSliderValue().Min);
+	ProgressSlider->SetMaxValue(FloatSetting->GetMinMaxSliderValue().Max);
+}
+
 void USNSettingOptionSliderWidget::OnSliderValueChanged(float Value)
 {
-	if(Setting.IsValid())
-	{
+	if(Setting)
 		Setting->SetValue(Value);
-	}
 }

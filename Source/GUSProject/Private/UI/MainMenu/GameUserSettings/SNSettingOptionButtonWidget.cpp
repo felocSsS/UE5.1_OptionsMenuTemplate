@@ -15,7 +15,7 @@ void USNSettingOptionButtonWidget::NativeOnInitialized()
 
 void USNSettingOptionButtonWidget::UpdateWidgetInfo()
 {
-	if (Setting.IsValid())
+	if (Setting)
 	{
 		SettingDisplayName->SetText(Setting->GetSettingName());
 		SettingCurrentValue->SetText(Setting->GetCurrentOptionName());
@@ -24,7 +24,7 @@ void USNSettingOptionButtonWidget::UpdateWidgetInfo()
 
 void USNSettingOptionButtonWidget::OnNextSetting()
 {
-	if (Setting.IsValid())
+	if (Setting)
 	{
 		Setting->ApplyNextOption();
 		SettingCurrentValue->SetText(Setting->GetCurrentOptionName());
@@ -33,7 +33,7 @@ void USNSettingOptionButtonWidget::OnNextSetting()
 
 void USNSettingOptionButtonWidget::OnPrevSetting()
 {
-	if (Setting.IsValid())
+	if (Setting)
 	{
 		Setting->ApplyPreviousOption();
 		SettingCurrentValue->SetText(Setting->GetCurrentOptionName());

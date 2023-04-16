@@ -50,7 +50,7 @@ protected:
 
 private:
 	UPROPERTY()
-	TArray<USNGameSettingCollection*> VideoSettings;
+	TArray<TObjectPtr<USNGameSettingCollection>> VideoSettings;
 
 	// AA_none - 0, AA_FXAA - 1, AA_TAA - 2, AA_MSAA - 3, AA_TSR - 4
 	

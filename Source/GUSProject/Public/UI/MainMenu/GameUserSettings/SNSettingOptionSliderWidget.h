@@ -16,10 +16,11 @@ class GUSPROJECT_API USNSettingOptionSliderWidget : public USNBaseSettingOptionW
 
 public:
 	virtual void UpdateWidgetInfo() override;
+	virtual void Init(USNGameSetting* InSetting) override;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	USlider* ProgressSlider;
+	TObjectPtr<USlider> ProgressSlider;
 
 	virtual void NativeOnInitialized() override;
 

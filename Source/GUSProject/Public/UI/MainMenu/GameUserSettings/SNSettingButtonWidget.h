@@ -23,10 +23,10 @@ protected:
 	virtual void NativeOnInitialized() override;
 	
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* ButtonText;
+	TObjectPtr<UTextBlock> ButtonText;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* SettingButton;
+	TObjectPtr<UButton> SettingButton;
 	
 private:
 	int32 IndexOfSettings;

@@ -14,6 +14,7 @@
 #include "SNGameUserSettings.h"
 #include "SNSettingOptionKeySelectorWidget.h"
 #include "GameFramework/GameUserSettings.h"
+#include "DataAssets/SNSensitivityDataAsset.h"
 
 void USNBaseSettingsScreenWidget::NativeOnInitialized()
 {
@@ -110,12 +111,15 @@ void USNSettingsScreenWidget_Audio::NativeOnInitialized()
 
 void USNSettingsScreenWidget_Gameplay::NativeOnInitialized()
 {
+	GameSettingInitializer = NewObject<USNGameSettingInitializer_Gameplay>();
+	
 	Super::NativeOnInitialized();
 }
 
 void USNSettingsScreenWidget_MouseAndKeyboard::NativeOnInitialized()
 {
 	GameSettingInitializer = NewObject<USNGameSettingInitializer_MouseAndKeyboard>();
+	Cast<USNGameSettingInitializer_MouseAndKeyboard>(GameSettingInitializer)->SetSensitivityDataAsset(SensitivityDataAsset);
 	
 	Super::NativeOnInitialized();
 }

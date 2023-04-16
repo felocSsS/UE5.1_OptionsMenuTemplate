@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "SNBaseSettingsScreenWidget.generated.h"
 
+class USNSensitivityDataAsset;
 class UVerticalBox;
 class UTextBlock;
 class USNGameSettingCollectionWidget;
@@ -14,7 +15,7 @@ class USNGameSettingInitializer;
 class UButton;
 class USNBaseSettingOptionWidget;
 
-UCLASS()
+UCLASS(Abstract)
 class GUSPROJECT_API USNBaseSettingsScreenWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -35,18 +36,18 @@ protected:
 	TSubclassOf<USNBaseSettingOptionWidget> GameSettingKeySelectorWidgetClass;
 
 	UPROPERTY(meta=(BindWidget))
-	UVerticalBox* SettingsCollectionContainer;
+	TObjectPtr<UVerticalBox> SettingsCollectionContainer;
 
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* DescriptionHeader;
+	TObjectPtr<UTextBlock> DescriptionHeader;
 
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* DescriptionText;
+	TObjectPtr<UTextBlock> DescriptionText;
 	
 	virtual void NativeOnInitialized() override;
 
 	UPROPERTY()
-	USNGameSettingInitializer* GameSettingInitializer;
+	TObjectPtr<USNGameSettingInitializer> GameSettingInitializer;
 	
 private:
 	void SetDescriptionBlockText(FText InDescriptionHeaderText, FText InDescriptionText);
@@ -60,7 +61,7 @@ class GUSPROJECT_API USNSettingsScreenWidget_Video : public USNBaseSettingsScree
 
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UButton* RunBenchmarkButton;
+	TObjectPtr<UButton> RunBenchmarkButton;
 
 	virtual void NativeOnInitialized() override;
 
@@ -98,5 +99,8 @@ class GUSPROJECT_API USNSettingsScreenWidget_MouseAndKeyboard : public USNBaseSe
 
 protected:
 	virtual void NativeOnInitialized() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USNSensitivityDataAsset> SensitivityDataAsset;
 	
 };

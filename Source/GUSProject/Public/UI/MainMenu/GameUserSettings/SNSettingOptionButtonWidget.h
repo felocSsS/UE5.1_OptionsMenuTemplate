@@ -20,13 +20,13 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SettingCurrentValue;
+	TObjectPtr<UTextBlock> SettingCurrentValue;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* NextSettingButton;
+	TObjectPtr<UButton> NextSettingButton;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* PrevSettingButton;
+	TObjectPtr<UButton> PrevSettingButton;
 
 	virtual void NativeOnInitialized() override;
 	

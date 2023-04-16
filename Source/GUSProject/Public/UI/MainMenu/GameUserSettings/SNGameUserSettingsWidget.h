@@ -28,10 +28,10 @@ protected:
 	TSubclassOf<USNSettingButtonWidget> SettingsScreenButtonWidgetClass;
 	
 	UPROPERTY(meta=(BindWidget))
-	UHorizontalBox* ButtonsContainer;
+	TObjectPtr<UHorizontalBox> ButtonsContainer;
 
 	UPROPERTY(meta=(BindWidget))
-	UWidgetSwitcher* SettingsContainer;
+	TObjectPtr<UWidgetSwitcher> SettingsContainer;
 
 private:
 	void OpenWidget(int32 Index);

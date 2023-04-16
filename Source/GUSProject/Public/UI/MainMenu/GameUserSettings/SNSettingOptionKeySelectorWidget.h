@@ -19,13 +19,13 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	UInputKeySelector* FirstKeySelector;
+	TObjectPtr<UInputKeySelector> FirstKeySelector;
 
 	UPROPERTY(meta=(BindWidget))
-	UInputKeySelector* SecondKeySelector;
+	TObjectPtr<UInputKeySelector> SecondKeySelector;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* DeleteKeyButton;
+	TObjectPtr<UButton> DeleteKeyButton;
 
 	virtual void NativeOnInitialized() override;
 	
