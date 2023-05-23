@@ -58,6 +58,20 @@ private:
 };
 
 UCLASS()
+class GUSPROJECT_API USNGameSettingInitializer_Audio : public USNGameSettingInitializer
+{
+	GENERATED_BODY()
+
+public:
+	virtual void Init() override;
+	
+protected:
+
+private:
+	
+};
+
+UCLASS()
 class GUSPROJECT_API USNGameSettingInitializer_MouseAndKeyboard : public USNGameSettingInitializer
 {
 	GENERATED_BODY()

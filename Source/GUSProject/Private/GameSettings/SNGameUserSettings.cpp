@@ -3,13 +3,19 @@
 #include "GameSettings/SNGameUserSettings.h"
 
 #include "SNGameSetting.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "GameSettings/SNGameSetting.h"
+#include "Sound/SoundMix.h"
 
 #define LOCTEXT_NAMESPACE "GameUserSettings"
 
 USNGameUserSettings::USNGameUserSettings()
-{
+{	
+	SoundMix = LoadObject<USoundMix>(nullptr, TEXT("/Game/Audio/SNSoundMix.SNSoundMix"));
+	MusicVolumeClass = LoadObject<USoundClass>(nullptr, TEXT("/Game/Audio/MusicVolumeClass.MusicVolumeClass"));
+	SoundEffectsVolumeClass = LoadObject<USoundClass>(nullptr, TEXT("/Game/Audio/SoundEffectsVolumeClass.SoundEffectsVolumeClass"));
+	DialogueVolumeClass = LoadObject<USoundClass>(nullptr, TEXT("/Game/Audio/DialogueVolumeClass.DialogueVolumeClass"));
+	
 	const TArray<FOptionNumber> VFXOptions = {
 		{LOCTEXT("VFXQualityLow_Loc", "Low"), 0} ,
 		{LOCTEXT("VFXQualityMedium_Loc", "Medium"), 1} ,
@@ -227,6 +233,42 @@ USNGameUserSettings::USNGameUserSettings()
 	}
 
 	VideoSettings.Add(GraphicsQuality);
+
+	const auto AudioSettingsCollection = NewObject<USNGameSettingCollection>();
+	AudioSettingsCollection->SetCollectionName(LOCTEXT("Audio_Loc" , "Audio Volume"));
+
+	{
+		USNGameSetting_Float* Setting = NewObject<USNGameSetting_Float>();
+		Setting->SetSettingName(LOCTEXT("MusicVolume_Loc" , "Music Volume"));
+		Setting->SetSettingDescription(LOCTEXT("MusicVolumeD_Loc", "Music Volume description"));
+		Setting->AddGetterFunc([&]() { return GetMusicVolume(); } );
+		Setting->AddSetterFunc([&](float Level){ SetMusicVolume(Level); ApplySettings(false);  });
+		Setting->WidgetType = EWidgetType::Slider;
+		Setting->SetMinMaxSliderValue(FMinMaxSliderValue{0.0f, 1.0f});
+		AudioSettingsCollection->AddSettingToCollection(Setting);
+	}
+	{
+		USNGameSetting_Float* Setting = NewObject<USNGameSetting_Float>();
+		Setting->SetSettingName(LOCTEXT("SoundEffectsVolume_Loc" , "Sound Effects Volume"));
+		Setting->SetSettingDescription(LOCTEXT("SoundEffectsVolumeD_Loc", "Sound Effects Volume description"));
+		Setting->AddGetterFunc([&]() { return GetSoundEffectsVolume(); } );
+		Setting->AddSetterFunc([&](float Level){ SetSoundEffectsVolume(Level); ApplySettings(false);  });
+		Setting->WidgetType = EWidgetType::Slider;
+		Setting->SetMinMaxSliderValue(FMinMaxSliderValue{0.0f, 1.0f});
+		AudioSettingsCollection->AddSettingToCollection(Setting);
+	}
+	{
+		USNGameSetting_Float* Setting = NewObject<USNGameSetting_Float>();
+		Setting->SetSettingName(LOCTEXT("DialogueVolume_Loc" , "Dialogue Volume"));
+		Setting->SetSettingDescription(LOCTEXT("DialogueVolumeD_Loc", "Dialogue Volume description"));
+		Setting->AddGetterFunc([&]() { return GetDialogueVolume(); } );
+		Setting->AddSetterFunc([&](float Level){ SetDialogueVolume(Level); ApplySettings(false);  });
+		Setting->WidgetType = EWidgetType::Slider;
+		Setting->SetMinMaxSliderValue(FMinMaxSliderValue{0.0f, 1.0f});
+		AudioSettingsCollection->AddSettingToCollection(Setting);
+	}
+
+	AudioSettings.Add(AudioSettingsCollection);
 }
 
 USNGameUserSettings* USNGameUserSettings::Get()
@@ -239,6 +281,11 @@ const TArray<USNGameSettingCollection*>& USNGameUserSettings::GetVideoSettings()
 	return VideoSettings;
 }
 
+const TArray<USNGameSettingCollection*>& USNGameUserSettings::GetAudioSettings() const
+{
+	return AudioSettings;
+}
+
 void USNGameUserSettings::RunBenchmark()
 {
 	RunHardwareBenchmark();
@@ -249,7 +296,6 @@ void USNGameUserSettings::RunBenchmark()
 int32 USNGameUserSettings::GetAAMethod() const
 {
 	return UKismetSystemLibrary::GetConsoleVariableIntValue("r.AntiAliasingMethod");
-	
 }
 
 void USNGameUserSettings::SetAAMethod(int32 InAntialiasingMethod)
@@ -287,6 +333,43 @@ void USNGameUserSettings::SetMSAAQuality(int32 InMSAAQuality)
 	GConfig->Flush(true, GEngineIni);
 }
 
+float USNGameUserSettings::GetMusicVolume() const
+{
+	return MusicVolume;
+}
+
+void USNGameUserSettings::SetMusicVolume(float Value)
+{
+	MusicVolume = Value;
+	UWorld* world = GEngine->GameViewport->GetWorld();
+	UGameplayStatics::SetSoundMixClassOverride(world, SoundMix, MusicVolumeClass, Value); 
+	UGameplayStatics::PushSoundMixModifier(world, SoundMix);
+}
+
+float USNGameUserSettings::GetSoundEffectsVolume() const
+{
+	return SoundEffectsVolume;
+}
+
+void USNGameUserSettings::SetSoundEffectsVolume(float Value)
+{
+	SoundEffectsVolume = Value;
+	UWorld* world = GEngine->GameViewport->GetWorld();
+	UGameplayStatics::SetSoundMixClassOverride(world, SoundMix, SoundEffectsVolumeClass, Value); 
+	UGameplayStatics::PushSoundMixModifier(world, SoundMix);
+}
+
+float USNGameUserSettings::GetDialogueVolume() const
+{
+	return DialogueVolume;
+}
+
+void USNGameUserSettings::SetDialogueVolume(float Value)
+{
+	DialogueVolume = Value;
+	UWorld* world = GEngine->GameViewport->GetWorld();
+	UGameplayStatics::SetSoundMixClassOverride(world, SoundMix, DialogueVolumeClass, Value); 
+	UGameplayStatics::PushSoundMixModifier(world, SoundMix);
+}
+
 #undef LOCTEXT_NAMESPACE
-
-

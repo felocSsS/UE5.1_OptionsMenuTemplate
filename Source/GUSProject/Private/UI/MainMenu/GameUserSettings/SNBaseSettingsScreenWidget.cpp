@@ -106,6 +106,8 @@ void USNSettingsScreenWidget_Video::OnVideoSettingsUpdated()
 
 void USNSettingsScreenWidget_Audio::NativeOnInitialized()
 {
+	GameSettingInitializer = NewObject<USNGameSettingInitializer_Audio>();
+	
 	Super::NativeOnInitialized();
 }
 

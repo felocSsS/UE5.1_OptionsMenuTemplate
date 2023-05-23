@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SNGameSettingCollection.h"
 #include "GameFramework/GameUserSettings.h"
+#include "Kismet/GameplayStatics.h"
 #include "SNGameUserSettings.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnSettingsUpdatedDelegate);
@@ -29,6 +30,7 @@ enum class EMSAAQuality : uint8
 };
 
 class USNGameSettingCollection;
+class USoundMix;
 
 UCLASS()
 class GUSPROJECT_API USNGameUserSettings : public UGameUserSettings
@@ -41,6 +43,7 @@ public:
 	static USNGameUserSettings* Get();
 	
  	const TArray<USNGameSettingCollection*>& GetVideoSettings() const;
+ 	const TArray<USNGameSettingCollection*>& GetAudioSettings() const;
 
 	void RunBenchmark();
 
@@ -52,6 +55,9 @@ private:
 	UPROPERTY()
 	TArray<TObjectPtr<USNGameSettingCollection>> VideoSettings;
 
+	UPROPERTY()
+	TArray<TObjectPtr<USNGameSettingCollection>> AudioSettings;
+
 	// AA_none - 0, AA_FXAA - 1, AA_TAA - 2, AA_MSAA - 3, AA_TSR - 4
 	
 	int32 GetAAMethod() const;
@@ -59,5 +65,30 @@ private:
 	
 	int32 GetMSAAQuality() const;
 	void SetMSAAQuality(int32 InMSAAQuality);
-    	
+
+	float GetMusicVolume() const;
+	void SetMusicVolume(float Value);
+
+	float GetSoundEffectsVolume() const;
+	void SetSoundEffectsVolume(float Value);
+
+	float GetDialogueVolume() const;
+	void SetDialogueVolume(float Value);
+
+	UPROPERTY(config)
+	float MusicVolume;
+	UPROPERTY(config)
+	float SoundEffectsVolume;
+	UPROPERTY(config)
+	float DialogueVolume;
+
+	UPROPERTY()
+	TObjectPtr<USoundMix> SoundMix;
+	UPROPERTY()
+	TObjectPtr<USoundClass> MusicVolumeClass;
+	UPROPERTY()
+	TObjectPtr<USoundClass> SoundEffectsVolumeClass;
+	UPROPERTY()
+	TObjectPtr<USoundClass> DialogueVolumeClass;
+	
 };

@@ -69,6 +69,17 @@ void USNGameSettingInitializer_Video::Init()
 	SettingCollections = VideoSettings;
 }
 
+void USNGameSettingInitializer_Audio::Init()
+{
+	auto* UserSettings = USNGameUserSettings::Get();
+	if (!UserSettings) return;
+
+	UserSettings->LoadSettings();
+	const auto AudioSettings = UserSettings->GetAudioSettings();
+
+	SettingCollections = AudioSettings;
+}
+
 void USNGameSettingInitializer_MouseAndKeyboard::Init()
 {
 	const auto SensitivitySettingsCollection = NewObject<USNGameSettingCollection>();
